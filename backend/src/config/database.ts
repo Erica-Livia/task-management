@@ -1,6 +1,10 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { User } from '../modals/User';
+import {Board} from "../modals/Board";
+import {Column} from "../modals/Column";
+import {Task} from "../modals/Task";
+import {Subtask} from "../modals/Subtask";
 
 dotenv.config();
 
@@ -12,7 +16,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_DATABASE || 'task_management_db',
   synchronize: true, 
-  entities: [User],
+  entities: [User, Board, Column, Task, Subtask],
 
   migrations: ['src/migrations/**/*.ts'],
   subscribers: ['src/subscribers/**/*.ts'],
