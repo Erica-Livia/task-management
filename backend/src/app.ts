@@ -3,6 +3,7 @@ import express, { Express } from 'express';
 import * as dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes';
 import welcomeRoutes from './routes/welcome.routes';
+import boardRouter from './routes/board.routes';
 import { initializeDatabase } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 import cors from 'cors';
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Routes
 app.use('/', welcomeRoutes);
 app.use('/auth', authRoutes);
+app.use('/boards', boardRouter);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
