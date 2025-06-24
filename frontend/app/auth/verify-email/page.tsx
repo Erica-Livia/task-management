@@ -34,7 +34,7 @@ function VerifyEmailContent() {
         })
             .then((res) => {
                 setPageStatus({ status: "success", message: res.data.message });
-                setTimeout(() => router.push("/login"), 3000);
+                setTimeout(() => router.push("/signin"), 3000);
             })
             .catch((err: AxiosError<{ message: string }>) => {
                 setPageStatus({ status: "error", message: err.response?.data?.message || "Verification failed." });

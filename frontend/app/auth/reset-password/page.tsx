@@ -35,7 +35,7 @@ function Form() {
         try {
             await axios.post(`http://127.0.0.1:5000/auth/reset-password/${token}`, { newPassword: formData.newPassword });
             toast.success("Password updated! Redirecting...", { id: toastId });
-            setTimeout(() => router.push("/login"), 3000);
+            setTimeout(() => router.push("/signin"), 3000);
         } catch (err) {
             const error = err as AxiosError<{ message: string }>;
             toast.error(error.response?.data?.message || "Failed to reset. Link may have expired.", { id: toastId });
