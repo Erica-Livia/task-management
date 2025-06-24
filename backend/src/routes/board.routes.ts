@@ -7,7 +7,7 @@ import {
   deleteBoardHandler 
 } from '../controllers/board.controller';
 import { validate } from '../middleware/validate.middleware';
-import { requireUser } from '../middleware/requireUser.middleware';
+import { authMiddleware } from '../middleware/requireUser.middleware';
 import { 
   createBoardSchema, 
   getOrDeleteBoardSchema, 
@@ -16,7 +16,7 @@ import {
 
 
 const router = express.Router();
-router.use(requireUser);
+router.use(authMiddleware);
 
 router.post('/', validate(createBoardSchema), createBoardHandler);
 

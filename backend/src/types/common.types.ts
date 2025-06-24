@@ -5,8 +5,15 @@ import { User } from '../modals/User';
 export interface AuthenticatedRequest extends Request {
   user: {
     id: string;
-    role: "user" | "admin" | "superAdmin";
   };
+}
+
+declare global {
+  namespace Express {
+    export interface Request {
+      user?: User;
+    }
+  }
 }
 
 export interface ValidationResult<T> {
