@@ -8,7 +8,7 @@ import { initializeDatabase } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 import cors from 'cors';
 import path from 'path';
-
+import taskRouter from './routes/task.routes';
 
 dotenv.config();
 
@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/', welcomeRoutes);
 app.use('/auth', authRoutes);
 app.use('/boards', boardRouter);
+app.use('/tasks', taskRouter);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
