@@ -46,12 +46,12 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
                     ) : (
                         <>
                             <div className="w-28">
-                                <Link href="/login">
+                                <Link href="/signin">
                                     <Button variant="secondary">Login</Button>
                                 </Link>
                             </div>
                             <div className="w-28">
-                                <Link href="/signup">
+                                <Link href="/signin">
                                     <Button variant="primary">Sign Up</Button>
                                 </Link>
                             </div>
