@@ -6,7 +6,7 @@ export const requireUser = async (req: Request, res: Response, next: NextFunctio
   try {
    
     const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOneBy({ id: 1 });
+    const user = await userRepository.findOneBy({ });
 
     if (!user) {
       res.status(401).json({ message: 'Authentication required. User not found.' });
