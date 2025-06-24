@@ -1,14 +1,15 @@
-import { getRepository } from 'typeorm';
+import {AppDataSource} from "../config/database";
 import { Task } from '../modals/Task';
 import { Column } from '../modals/Column';
 import { Subtask } from '../modals/Subtask';
-import { CreateTaskDto, UpdateTaskDto } from '../schemas/task.Schema';
 import { AppError } from '../utils/errors';
+import { CreateTaskDto, UpdateTaskDto } from '../schemas/task.schema';
+
 
 export class TaskService {
-  private taskRepository = getRepository(Task);
-  private columnRepository = getRepository(Column);
-  private subtaskRepository = getRepository(Subtask);
+    private taskRepository = AppDataSource.getRepository(Task);
+    private columnRepository = AppDataSource.getRepository(Column);
+    private subtaskRepository = AppDataSource.getRepository(Subtask);
 
   public async createTask(taskData: CreateTaskDto, userId: number): Promise<Task> {
     const column = await this.columnRepository.findOne({
