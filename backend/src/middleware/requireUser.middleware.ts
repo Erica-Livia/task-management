@@ -18,7 +18,8 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
     const token = authHeader.split(' ')[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number };
 
     const userRepository = AppDataSource.getRepository(User);
     const currentUser = await userRepository.findOneBy({ id: decoded.id });

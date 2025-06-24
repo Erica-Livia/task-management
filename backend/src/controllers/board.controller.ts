@@ -23,9 +23,9 @@ export const createBoardHandler = async (
 
 export const getBoardsHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = res.locals.user;
-    const boards = await BoardService.findBoardsByUser(user.id);
-    res.status(200).json({ data: boards });
+    const userId = req.user!.id;
+    const boards = await BoardService.findBoardsByUser(userId);
+    res.status(200).json( boards );
   } catch (error) {
     next(error);
   }

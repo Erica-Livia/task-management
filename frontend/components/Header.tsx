@@ -24,8 +24,8 @@ const TaskBuddyLogo: React.FC = () => (
 
 const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
     return (
-        <header className="bg-white p-4 shadow-sm dark:bg-gray-dark border-b border-gray-light dark:border-gray-dark">
-            <nav className="container mx-auto flex items-center justify-between">
+        <header className="bg-white p-4 shadow-2xl dark:bg-gray-dark border-b border-gray-300 dark:border-gray-dark">
+            <nav className="mx-auto flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2">
                     <TaskBuddyLogo />
                     <span className="text-xl font-bold text-black dark:text-white">Task Buddy</span>

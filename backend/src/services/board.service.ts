@@ -33,6 +33,7 @@ export const createBoard = async (input: CreateBoardInput, user: User) => {
 export const findBoardsByUser = async (userId: number) => {
   return await boardRepository.find({
     where: { user: { id: userId } },
+    select: ["id", "name"]
   });
 };
 

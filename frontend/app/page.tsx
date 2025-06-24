@@ -1,8 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import {useParams, useRouter} from 'next/navigation';
 import toast from 'react-hot-toast';
 import Header from '@/components/Header';
+import Sidebar from "@/components/Sidebar";
+import BoardView from "@/components/BoardView";
+import {useBoardStore} from "@/store/boardStore";
 
 interface User {
     name: string;
@@ -18,7 +21,27 @@ const FullScreenLoader = () => (
 function Page() {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const params = useParams();
+    const boardId = parseInt(params.boardId as string, 10);
     const router = useRouter();
+
+    const {
+        fetchBoards,
+        fetchBoardById,
+        activeBoard,
+        error,
+    } = useBoardStore();
+
+    useEffect(() => {
+        fetchBoards();
+    }, [fetchBoards]);
+
+    useEffect(() => {
+        // Fetch the specific board data whenever the ID in the URL changes
+        if (boardId) {
+            fetchBoardById(boardId);
+        }
+    }, [boardId, fetchBoardById]);
 
     useEffect(() => {
         try {
@@ -51,33 +74,37 @@ function Page() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-light font-sans dark:bg-gray-v-dark">
-            <Header user={user} onLogout={handleLogout} />
+        <div className="flex flex-col h-screen bg-gray-light font-sans dark:bg-gray-v-dark">
+            <Header user={user} onLogout={handleLogout}/>
+            <div className="flex flex-grow overflow-hidden">
+                <Sidebar activeBoardId={boardId}/>
+                <BoardView board={activeBoard}/>
+            </div>
 
-            <main className="container mx-auto mt-10 p-8 text-center">
-                {user ? (
-                    <div className="space-y-4">
-                        <h1 className="text-xl font-bold text-black dark:text-white">
-                            Welcome back, {user.name}!
-                        </h1>
-                        <p className="text-body-lg text-gray-medium">
-                            You are successfully logged in. Your dashboard and tasks will appear here soon.
-                        </p>
-                        <p className="text-xs text-gray-medium">
-                            Your registered email is: {user.email}
-                        </p>
-                    </div>
-                ) : (
-                    <div className="space-y-4">
-                        <h1 className="text-xl font-bold text-black dark:text-white">
-                            Welcome to the Task Buddy Task Manager
-                        </h1>
-                        <p className="text-body-lg text-gray-medium">
-                            Please log in or create an account to manage your projects and tasks.
-                        </p>
-                    </div>
-                )}
-            </main>
+            {/*<main className="container mx-auto mt-10 p-8 text-center">*/}
+            {/*    {user ? (*/}
+            {/*        <div className="space-y-4">*/}
+            {/*            <h1 className="text-xl font-bold text-black dark:text-white">*/}
+            {/*                Welcome back, {user.name}!*/}
+            {/*            </h1>*/}
+            {/*            <p className="text-body-lg text-gray-medium">*/}
+            {/*                You are successfully logged in. Your dashboard and tasks will appear here soon.*/}
+            {/*            </p>*/}
+            {/*            <p className="text-xs text-gray-medium">*/}
+            {/*                Your registered email is: {user.email}*/}
+            {/*            </p>*/}
+            {/*        </div>*/}
+            {/*    ) : (*/}
+            {/*        <div className="space-y-4">*/}
+            {/*            <h1 className="text-xl font-bold text-black dark:text-white">*/}
+            {/*                Welcome to the Task Buddy Task Manager*/}
+            {/*            </h1>*/}
+            {/*            <p className="text-body-lg text-gray-medium">*/}
+            {/*                Please log in or create an account to manage your projects and tasks.*/}
+            {/*            </p>*/}
+            {/*        </div>*/}
+            {/*    )}*/}
+            {/*</main>*/}
         </div>
     );
 }
