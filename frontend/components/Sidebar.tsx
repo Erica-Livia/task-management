@@ -3,13 +3,14 @@ import Link from 'next/link';
 import { useBoardStore } from '@/store/boardStore';
 import { Board } from '@/types/taskbuddy';
 
+
 interface SidebarProps {
     activeBoardId: number;
 }
 
 export default function Sidebar({ activeBoardId }: SidebarProps) {
     const boards = useBoardStore((state) => state.boards);
-
+    const openBoardModal = useBoardStore(state => state.openBoardModal);
     return (
         <aside className="w-64 bg-white dark:bg-gray-dark flex-shrink-0 p-4 border-r dark:border-gray-v-dark">
             <h2 className="text-sm font-bold text-gray-medium mb-4">ALL BOARDS</h2>
@@ -30,6 +31,9 @@ export default function Sidebar({ activeBoardId }: SidebarProps) {
                             </Link>
                         </li>
                     ))}
+                    <button onClick={() => openBoardModal()} className="flex items-center gap-3 p-3 text-purple">
+                        <span>+ Create New Board</span>
+                    </button>
                 </ul>
             </nav>
         </aside>

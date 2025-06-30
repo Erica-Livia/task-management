@@ -3,11 +3,12 @@ import React from 'react';
 type ButtonVariant = 'primary' | 'secondary' | 'destructive' | 'toggleActive' | 'toggleInactive';
 
 interface ButtonProps {
-    children: React.ReactNode;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-    type?: 'button' | 'submit' | 'reset';
-    variant?: ButtonVariant;
-    className?: string;
+    children: React.ReactNode,
+    onClick?: React.MouseEventHandler<HTMLButtonElement>,
+    type?: 'button' | 'submit' | 'reset',
+    variant?: ButtonVariant,
+    className?: string,
+    disabled?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,7 +16,8 @@ const Button: React.FC<ButtonProps> = ({
                                            onClick,
                                            type = 'button',
                                            variant = 'primary',
-                                           className = ''
+                                           className = '',
+                                           disabled
                                        }) => {
     const baseClasses = 'w-full rounded-md px-4 py-2 text-sm font-bold transition-colors duration-200 disabled:opacity-50';
 

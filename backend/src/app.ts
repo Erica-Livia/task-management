@@ -4,6 +4,8 @@ import * as dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes';
 import welcomeRoutes from './routes/welcome.routes';
 import boardRouter from './routes/board.routes';
+import subtaskRoutes from './routes/subtask.routes';
+import columnRoutes from './routes/column.routes';
 import { initializeDatabase } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 import cors from 'cors';
@@ -27,6 +29,8 @@ app.use('/', welcomeRoutes);
 app.use('/auth', authRoutes);
 app.use('/boards', boardRouter);
 app.use('/tasks', taskRouter);
+app.use('/subtasks', subtaskRoutes);
+app.use('/columns', columnRoutes);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
