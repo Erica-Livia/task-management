@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { User } from '../modals/User';
 
 
+// @ts-ignore
 export interface AuthenticatedRequest extends Request {
   user: {
     id: string;
