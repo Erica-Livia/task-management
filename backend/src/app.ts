@@ -11,6 +11,7 @@ import { errorHandler } from './middleware/errorHandler';
 import cors from 'cors';
 import path from 'path';
 import taskRouter from './routes/task.routes';
+import statsRoutes from "./routes/stats.routes";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/boards', boardRouter);
 app.use('/tasks', taskRouter);
 app.use('/subtasks', subtaskRoutes);
 app.use('/columns', columnRoutes);
+app.use('/stats', statsRoutes);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 

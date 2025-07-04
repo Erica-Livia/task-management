@@ -16,6 +16,11 @@ interface UpdateTaskDto {
     subtasks?: { id?: number; title: string; isCompleted: boolean }[];
 }
 
+interface ReorderTasksDto {
+    id: number;
+    position: number;
+    columnId: number;
+}
 
 interface BoardState {
     boards: Pick<Board, 'id' | 'name'>[];
@@ -42,14 +47,11 @@ interface BoardState {
     updateColumn: (columnId: number, name: string) => Promise<void>;
     deleteColumn: (columnId: number) => Promise<void>;
 
-    addTask: (taskData: { subtasks: string[]; columnId: number; description: string; title: string }) => Promise<void>;
-    updateTask: (taskId: number, taskData: {
-        subtasks: { id?: number; title: string }[];
-        columnId: number;
-        description: string;
-        title: string
-    }) => Promise<void>;
+    addTask: (taskData: CreateTaskDto) => Promise<void>;
+    updateTask: (taskId: number, taskData: { columnId: number }) => Promise<void>;
     deleteTask: (taskId: number) => Promise<void>;
+    reorderTasks: (reorderedTasks: ReorderTasksDto[]) => Promise<void>;
+    setOptimisticBoard: (updatedBoard: Board) => void;
 
     selectTask: (task: Task) => void;
     clearSelectedTask: () => void;
@@ -57,9 +59,9 @@ interface BoardState {
 
     openBoardModal: (board?: Board | null) => void;
     closeBoardModal: () => void;
-    openTaskModal: (task?: Task, columnId?: number) => void;
+    openTaskModal: (task?: Task) => void;
     closeTaskModal: () => void;
-    openDeleteModal: (type: "board" | "task" | "column", item: { id: number; name: string }) => void;
+    openDeleteModal: (type: "board" | "task" | "column", item: { columns: any[]; name: string; id: number }) => void;
     closeDeleteModal: () => void;
 }
 
@@ -222,6 +224,19 @@ export const useBoardStore = create<BoardState>((set, get) => ({
             clearSelectedTask();
         } catch (error) {
             console.error("Failed to delete task", error);
+        }
+    },
+
+    setOptimisticBoard: (updatedBoard) => set({ activeBoard: updatedBoard }),
+
+    reorderTasks: async (reorderedTasks) => {
+        const { activeBoard } = get();
+        const originalBoard = { ...activeBoard! };
+        try {
+            await api.post('/tasks/reorder', { tasks: reorderedTasks });
+        } catch (error) {
+            console.error("Failed to reorder tasks, reverting.", error);
+            set({ activeBoard: originalBoard });
         }
     },
 

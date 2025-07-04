@@ -25,11 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+      <html lang="en">
+      <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'/>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      {/* Toaster component will render notifications here */}
       <Toaster
           position="top-center"
           toastOptions={{
@@ -47,8 +47,8 @@ export default function RootLayout({
               }
           }}
       />
-        {children}
+      {children}
       </body>
-    </html>
+      </html>
   );
 }

@@ -81,10 +81,10 @@ export default function BoardPage() {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-gray-light dark:bg-gray-v-dark">
-            <Header user={user} onLogout={handleLogout} />
-            <div className="flex flex-grow overflow-hidden">
-                <Sidebar activeBoardId={boardId} />
+        <div className="flex h-screen bg-gray-light dark:bg-gray-v-dark">
+            <Sidebar activeBoardId={boardId} />
+            <div className="flex flex-col w-full">
+                <Header user={user} onLogout={handleLogout} />
                 <BoardView board={activeBoard} />
             </div>
 

@@ -33,7 +33,9 @@ export default function AddEditTaskModal() {
                 setTitle('');
                 setDescription('');
                 setSubtasks([{ title: '' }, { title: '' }]);
-                setStatus(activeBoard?.columns[0]?.id || 0);
+                if (activeBoard?.columns && activeBoard.columns.length > 0) {
+                    setStatus(activeBoard.columns[0].id);
+                }
             }
         }
     }, [isTaskModalOpen, editingTask, activeBoard]);
@@ -54,30 +56,23 @@ export default function AddEditTaskModal() {
             return;
         }
 
-        // Correctly format subtasks from an array of objects to an array of strings
-        const subtaskTitles = subtasks
-            .map(s => s.title)
-            .filter(title => title.trim() !== '');
-
-        // When creating a new task
-        if (!editingTask) {
+        if (editingTask) {
+            const subtasksForUpdate = subtasks.filter(s => s.title.trim() !== '');
+            await updateTask(editingTask.id, {
+                title,
+                description,
+                columnId: status,
+                subtasks: subtasksForUpdate,
+            });
+        } else {
+            const subtaskTitles = subtasks
+                .map(s => s.title)
+                .filter(title => title.trim() !== '');
             await addTask({
                 title,
                 description,
                 columnId: status,
                 subtasks: subtaskTitles,
-            });
-        } else {
-            // When editing, you might need a different payload structure if you
-            // are adding, updating, and deleting subtasks simultaneously.
-            // For now, let's assume updateTask also expects string titles for new subtasks.
-            await updateTask(editingTask.id, {
-                title,
-                description,
-                columnId: status,
-                // The update DTO might be different, adjust as needed.
-                // This example assumes it can take an array of objects.
-                subtasks: subtasks,
             });
         }
     };
@@ -89,14 +84,14 @@ export default function AddEditTaskModal() {
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-            onClick={(e) => { if(e.target === e.currentTarget) closeTaskModal(); }}
+            onClick={(e) => { if (e.target === e.currentTarget) closeTaskModal(); }}
         >
             <div className="bg-white dark:bg-gray-dark rounded-lg p-6 w-full max-w-md space-y-4">
                 <h2 className="text-lg font-bold">{editingTask ? 'Edit Task' : 'Add New Task'}</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-medium">Title</label>
-                        <Input id="task-title" placeholder="e.g. Take coffee break" value={title} onChange={(e) => setTitle(e.target.value)}  name={"task title"}/>
+                        <Input id="task-title" name="task-title" placeholder="e.g. Take coffee break" value={title} onChange={(e) => setTitle(e.target.value)} />
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-medium">Description</label>
@@ -111,7 +106,7 @@ export default function AddEditTaskModal() {
                         <label className="text-sm font-bold text-gray-medium">Subtasks</label>
                         {subtasks.map((sub, index) => (
                             <div key={index} className="flex items-center gap-2">
-                                <Input id={`sub-${index}`} placeholder="e.g. Make coffee" value={sub.title} onChange={(e) => handleSubtaskChange(index, e.target.value)}  name={"task title"}/>
+                                <Input id={`sub-${index}`} name={`sub-${index}`} placeholder="e.g. Make coffee" value={sub.title} onChange={(e) => handleSubtaskChange(index, e.target.value)} />
                                 <button type="button" onClick={() => removeSubtask(index)} className="text-gray-medium text-xl font-bold hover:text-red">×</button>
                             </div>
                         ))}

@@ -14,15 +14,6 @@ interface HeaderProps {
     onLogout: () => void;
 }
 
-const TaskBuddyLogo: React.FC = () => (
-    <svg width="24" height="25" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg">
-        <rect width="6" height="25" rx="2" fill="#635FC7"/>
-        <rect opacity="0.75" x="9" width="6" height="25" rx="2" fill="#635FC7"/>
-        <rect opacity="0.5" x="18" width="6" height="25" rx="2" fill="#635FC7"/>
-    </svg>
-);
-
-
 const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
     const { activeBoard, openBoardModal, openDeleteModal, openTaskModal } = useBoardStore();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,19 +27,19 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
 
     const handleDeleteBoard = () => {
         if (activeBoard) {
-            openDeleteModal('board', { id: activeBoard.id, name: activeBoard.name });
+            openDeleteModal('board', {
+                id: activeBoard.id, name: activeBoard.name,
+                columns: []
+            });
             setIsMenuOpen(false);
         }
     };
 
     return (
         <header className="bg-white p-4 shadow-sm dark:bg-gray-dark border-b border-gray-light dark:border-gray-v-dark">
-            <nav className="container mx-auto flex items-center justify-between">
+            <nav className="flex justify-between items-center space-x-4">
                 <div className="flex items-center gap-4">
-                    <Link href="/" className="flex items-center gap-2">
-                        <TaskBuddyLogo/>
-                        <span className="text-xl font-bold text-black dark:text-white">Task Buddy</span>
-                    </Link>
+
                     <div className="h-6 w-px bg-gray-light dark:bg-gray-dark"></div>
                     <h1 className="text-xl font-bold text-black dark:text-white">{activeBoard?.name || ''}</h1>
                 </div>
@@ -57,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
                     <div className="w-40">
                         <Button
                             onClick={() => openTaskModal()}
-                            variant="primary"
+                            variant="addnew"
                             // disabled={!activeBoard || activeBoard.columns.length === 0}
                         >
                             + Add New Task
@@ -81,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
                     {user ? (
                         <>
                             <span className="hidden sm:block text-gray-medium">
-                                Welcome, <span className="font-bold">{user.name.split(' ')[0]}</span>
+                                <span className="font-bold">{user.name.split(' ')[0]}</span>
                             </span>
                             <div className="w-28">
                                 <Button onClick={onLogout} variant="destructive">

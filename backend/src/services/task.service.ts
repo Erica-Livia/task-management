@@ -3,7 +3,7 @@ import { Task } from '../modals/Task';
 import { Column } from '../modals/Column';
 import { Subtask } from '../modals/Subtask';
 import { AppError } from '../utils/errors';
-import { CreateTaskDto, UpdateTaskDto } from '../schemas/task.schema';
+import {CreateTaskDto, ReorderTasksDto, UpdateTaskDto} from '../schemas/task.schema';
 
 
 export class TaskService {
@@ -57,17 +57,11 @@ export class TaskService {
     task.title = taskData.title ?? task.title;
     task.description = taskData.description ?? task.description;
 
-    if (taskData.columnId && taskData.columnId !== task.column.id) {
-        const newColumn = await this.columnRepository.findOneOrFail({ 
-            where: { id: taskData.columnId },
-            relations: ['board', 'board.user']
-        }).catch(() => {
-            throw new AppError('Target column not found', 404);
-        });
-
-        if (newColumn.board.user.id !== userId) {
-            throw new AppError('You cannot move tasks to a board you do not own', 403);
-        }
+      if (taskData.columnId && taskData.columnId !== task.column.id) {
+          const newColumn = await this.columnRepository.findOneBy({ id: taskData.columnId });
+          if (!newColumn) {
+              throw new AppError('Target column not found', 404);
+          }
 
         task.column = newColumn;
         task.status = newColumn.name;
@@ -90,4 +84,36 @@ export class TaskService {
     
     await this.taskRepository.remove(task);
   }
+
+    public async reorderTasks(reorderData: ReorderTasksDto, userId: number): Promise<void> {
+        const { tasks } = reorderData;
+        if (!tasks || tasks.length === 0) return;
+
+        await AppDataSource.transaction(async (transactionalEntityManager) => {
+            const firstTask = await transactionalEntityManager.findOne(Task, {
+                where: { id: tasks[0].id },
+                relations: ['column', 'column.board', 'column.board.user']
+            });
+
+            if (!firstTask || firstTask.column.board.user.id !== userId) {
+                throw new AppError('Authorization failed. You do not own this board.', 403);
+            }
+
+            const updatePromises = tasks.map(async taskUpdate => {
+                const newColumn = await transactionalEntityManager.findOneBy(Column, {id: taskUpdate.columnId});
+                const newStatus = newColumn ? newColumn.name : 'Unknown';
+                return transactionalEntityManager.update(
+                    Task,
+                    {id: taskUpdate.id},
+                    {
+                        position: taskUpdate.position,
+                        column: {id: taskUpdate.columnId},
+                        status: newStatus,
+                    }
+                );
+            });
+
+            await Promise.all(updatePromises);
+        });
+    }
 }

@@ -74,37 +74,13 @@ function Page() {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-gray-light font-sans dark:bg-gray-v-dark">
-            <Header user={user} onLogout={handleLogout}/>
-            <div className="flex flex-grow overflow-hidden">
-                <Sidebar activeBoardId={boardId}/>
-                <BoardView board={activeBoard}/>
+        <div className="flex h-screen bg-gray-light font-sans dark:bg-gray-v-dark">
+            <Sidebar activeBoardId={boardId} />
+            <div className="flex flex-col w-full">
+                <Header user={user} onLogout={handleLogout} />
+                <BoardView board={activeBoard} />
             </div>
 
-            {/*<main className="container mx-auto mt-10 p-8 text-center">*/}
-            {/*    {user ? (*/}
-            {/*        <div className="space-y-4">*/}
-            {/*            <h1 className="text-xl font-bold text-black dark:text-white">*/}
-            {/*                Welcome back, {user.name}!*/}
-            {/*            </h1>*/}
-            {/*            <p className="text-body-lg text-gray-medium">*/}
-            {/*                You are successfully logged in. Your dashboard and tasks will appear here soon.*/}
-            {/*            </p>*/}
-            {/*            <p className="text-xs text-gray-medium">*/}
-            {/*                Your registered email is: {user.email}*/}
-            {/*            </p>*/}
-            {/*        </div>*/}
-            {/*    ) : (*/}
-            {/*        <div className="space-y-4">*/}
-            {/*            <h1 className="text-xl font-bold text-black dark:text-white">*/}
-            {/*                Welcome to the Task Buddy Task Manager*/}
-            {/*            </h1>*/}
-            {/*            <p className="text-body-lg text-gray-medium">*/}
-            {/*                Please log in or create an account to manage your projects and tasks.*/}
-            {/*            </p>*/}
-            {/*        </div>*/}
-            {/*    )}*/}
-            {/*</main>*/}
         </div>
     );
 }

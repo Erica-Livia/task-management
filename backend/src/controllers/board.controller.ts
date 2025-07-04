@@ -3,21 +3,21 @@ import * as BoardService from '../services/board.service';
 import { CreateBoardInput, UpdateBoardInput } from '../schemas/board.schema';
 
 export const createBoardHandler = async (
-  req: Request<{}, {}, CreateBoardInput>, 
-  res: Response, 
+  req: Request<{}, {}, CreateBoardInput>,
+  res: Response,
   next: NextFunction
 ) => {
   try {
-    const user = res.locals.user; 
-    
+    const user = req.user!;
+
     const board = await BoardService.createBoard(req.body, user);
-    
+
     res.status(201).json({
       message: 'Board created successfully',
       data: board,
     });
   } catch (error) {
-    next(error); 
+    next(error);
   }
 };
 
@@ -33,20 +33,20 @@ export const getBoardsHandler = async (req: Request, res: Response, next: NextFu
 
 export const getBoardHandler = async (
   req: Request<{ boardId: string }>,
-  res: Response, 
+  res: Response,
   next: NextFunction
 ) => {
   try {
     const boardId = parseInt(req.params.boardId, 10);
     const board = await BoardService.findBoardById(boardId);
 
-   
+
     if (!board) {
       res.status(404).json({ message: 'Board not found' });
       return;
     }
-    
-  
+
+
 
     res.status(200).json({ data: board });
   } catch (error) {
